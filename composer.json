@@ -1,6 +1,14 @@
 {
+    "name": "engrev/p7_vergne_thomas",
+    "description": "Projet 7 du parcours Développeur d'application - PHP / Symfony d'OpenClassrooms : réalisation d'une API REST avec symfony.",
     "type": "project",
     "license": "proprietary",
+    "authors": [
+        {
+            "name": "Engrev",
+            "email": "tvergne83@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=7.2.5",
         "ext-ctype": "*",
