@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ProductRepository;
+use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Class Product
+ * Class Customer
  * @package App\Entity
  *
  * @ApiResource(
@@ -17,11 +18,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     denormalizationContext={"groups"={"write"}}
  * )
  *
- * @ORM\Entity(repositoryClass=ProductRepository::class)
- * @ORM\Table(name="bm_products", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_name", columns={"name"})})
- * @UniqueEntity(fields={"name"}, message="Un produit existe déjà avec ce nom.")
+ * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @ORM\Table(name="bm_customers", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_email", columns={"email"})})
+ * @UniqueEntity(fields={"email"}, message="Un client existe déjà avec cet email.")
  */
-class Product
+class Customer implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -33,28 +34,28 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      *
      * @Groups({"read", "write"})
      */
-    private $name;
+    private $email;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=255)
+     *
+     * @Groups("write")
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="json")
      *
      * @Groups({"read", "write"})
      */
-    private $description;
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     *
-     * @Groups({"read", "write"})
-     */
-    private $brand;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -74,8 +75,7 @@ class Product
     private $updated_at;
 
     /**
-     * Product constructor.
-     * @throws \Exception
+     * Customer constructor.
      */
     public function __construct()
     {
@@ -93,39 +93,19 @@ class Product
     /**
      * @return string|null
      */
-    public function getName(): ?string
+    public function getEmail(): ?string
     {
-        return $this->name;
+        return $this->email;
     }
 
     /**
-     * @param string $name
+     * @param string $email
      *
      * @return $this
      */
-    public function setName(string $name): self
+    public function setEmail(string $email): self
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param $description
-     *
-     * @return $this
-     */
-    public function setDescription($description): self
-    {
-        $this->description = $description;
+        $this->email = $email;
 
         return $this;
     }
@@ -133,19 +113,45 @@ class Product
     /**
      * @return string|null
      */
-    public function getBrand(): ?string
+    public function getPassword(): ?string
     {
-        return $this->brand;
+        return $this->password;
     }
 
     /**
-     * @param string|null $brand
+     * @param string $password
      *
      * @return $this
      */
-    public function setBrand(?string $brand): self
+    public function setPassword(string $password): self
     {
-        $this->brand = $brand;
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_CUSTOMER
+        if (empty($roles)) {
+            $roles[] = 'ROLE_CUSTOMER';
+        }
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array|string[] $roles
+     *
+     * @return $this
+     */
+    public function setRoles(array $roles = ['ROLE_CUSTOMER']): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
@@ -199,12 +205,54 @@ class Product
     }
 
     /**
+     * @param \DateTimeInterface $updated_at
+     *
      * @return $this
      */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
-        $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
+        $this->updated_at = $updated_at;
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->roles,
+            $this->created_at,
+            $this->updated_at
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->roles,
+            $this->created_at,
+            $this->updated_at
+            ) = unserialize($serialized, ['allowed_classes' => false]); // Ne pas instancier la classe
+    }
+
+    public function getSalt()
+    {}
+
+    public function getUsername()
+    {}
+
+    public function eraseCredentials()
+    {}
+
 }
