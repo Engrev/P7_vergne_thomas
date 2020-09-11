@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package App\Entity
  *
  * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
+ *     normalizationContext={"groups"={"product:read"}},
+ *     denormalizationContext={"groups"={"product:write"}}
  * )
  *
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -28,48 +28,64 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups("read")
+     * @Groups({"product:read", "user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"product:read", "product:write", "user:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"product:read", "product:write", "user:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"product:read", "product:write", "user:read"})
      */
     private $brand;
 
     /**
+     * @ORM\Column(type="integer", options={"default":0})
+     *
+     * @Groups({"product:read", "product:write", "user:read"})
+     */
+    private $quantity;
+
+    /**
+     * @ORM\Column(type="decimal", precision=11, scale=2, options={"default":0})
+     *
+     * @Groups({"product:read", "product:write", "user:read"})
+     */
+    private $price;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups("product:write")
      */
     private $user;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups({"product:read", "user:read"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups({"product:read", "user:read"})
      */
     private $updated_at;
 
@@ -146,6 +162,46 @@ class Product
     public function setBrand(?string $brand): self
     {
         $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param int $quantity
+     *
+     * @return $this
+     */
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param string $price
+     *
+     * @return $this
+     */
+    public function setPrice(string $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }
