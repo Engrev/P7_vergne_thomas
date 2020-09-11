@@ -52,18 +52,18 @@ class User
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="user", orphanRemoval=true)
      *
-     * @Groups("user:read")
+     * @ApiSubresource()
      *
-     * @ApiSubresource
+     * @Groups("user:read")
      */
     private $products;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user", orphanRemoval=true)
      *
-     * @Groups("user:read")
+     * @ApiSubresource()
      *
-     * @ApiSubresource
+     * @Groups("user:read")
      */
     private $customers;
 
