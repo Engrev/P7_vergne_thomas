@@ -1,6 +1,6 @@
 api_platform:
     title: 'BileMo'
-    description: "Projet 7 du parcours Développeur d'application - PHP / Symfony d'OpenClassrooms : réalisation d'une API REST avec symfony."
+    description: "Projet 7 du parcours Développeur d'application - PHP / Symfony d'OpenClassrooms : réalisation d'une API REST avec Symfony."
     version: '1.0'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']

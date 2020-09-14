@@ -195,11 +195,11 @@ class Product
     }
 
     /**
-     * @param string $price
+     * @param float|string $price
      *
      * @return $this
      */
-    public function setPrice(string $price): self
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 
