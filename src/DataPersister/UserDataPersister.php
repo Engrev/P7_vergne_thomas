@@ -3,21 +3,21 @@
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Entity\Person;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * Class PersonDataPersister
+ * Class UserDataPersister
  * @package App\DataPersister
  */
-class PersonDataPersister implements ContextAwareDataPersisterInterface
+class UserDataPersister implements ContextAwareDataPersisterInterface
 {
     private $_entityManager;
     private $_passwordEncoder;
 
     /**
-     * PersonDataPersister constructor.
+     * UserDataPersister constructor.
      *
      * @param EntityManagerInterface       $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -36,12 +36,12 @@ class PersonDataPersister implements ContextAwareDataPersisterInterface
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Person;
+        return $data instanceof User;
     }
 
     /**
-     * @param Person $data
-     * @param array  $context
+     * @param User  $data
+     * @param array $context
      *
      * @return object|void
      */

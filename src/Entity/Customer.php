@@ -35,21 +35,21 @@ class Customer
     /**
      * @ORM\Column(type="string", length=100)
      *
-     * @Groups({"customer:read", "customer:write"})
+     * @Groups({"customer:read", "customer:write", "user:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
      *
-     * @Groups({"customer:read", "customer:write"})
+     * @Groups({"customer:read", "customer:write", "user:read"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"customer:read", "customer:write"})
+     * @Groups({"customer:read", "customer:write", "user:read"})
      */
     private $email;
 
