@@ -33,21 +33,21 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups("user:read")
+     * @Groups({"user:read", "product:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "product:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      *
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "product:read"})
      */
     private $email;
 
@@ -195,6 +195,16 @@ class User implements UserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @param string $roles
+     *
+     * @return bool
+     */
+    public function hasRoles(string $roles): bool
+    {
+        return in_array($roles, $this->roles);
     }
 
     /**
