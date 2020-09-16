@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package App\Entity
  *
  * @ApiResource(
+ *     iri="http://schema.org/Product",
  *     normalizationContext={"groups"={"product:read"}},
  *     denormalizationContext={"groups"={"product:write"}},
  *     collectionOperations={
@@ -38,6 +40,8 @@ class Product
      * @ORM\Column(type="integer")
      *
      * @Groups({"product:read", "user:read"})
+     *
+     * @ApiProperty(iri="http://schema.org/productID")
      */
     private $id;
 
@@ -45,6 +49,8 @@ class Product
      * @ORM\Column(type="string", length=100)
      *
      * @Groups({"product:read", "product:write", "user:read"})
+     *
+     * @ApiProperty(iri="http://schema.org/name")
      */
     private $name;
 
@@ -52,6 +58,8 @@ class Product
      * @ORM\Column(type="text", nullable=true)
      *
      * @Groups({"product:read", "product:write", "user:read"})
+     *
+     * @ApiProperty(iri="http://schema.org/description")
      */
     private $description;
 
@@ -59,6 +67,8 @@ class Product
      * @ORM\Column(type="string", length=100, nullable=true)
      *
      * @Groups({"product:read", "product:write", "user:read"})
+     *
+     * @ApiProperty(iri="http://schema.org/brand")
      */
     private $brand;
 
@@ -79,8 +89,6 @@ class Product
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
-     *
-     * @Groups("product:write")
      */
     private $user;
 
@@ -97,6 +105,12 @@ class Product
      * @Groups({"product:read", "user:read"})
      */
     private $updated_at;
+
+    /**
+     * @var array
+     * @Groups({"product:read", "user:read"})
+     */
+    private $links = [];
 
     /**
      * Product constructor.
@@ -196,15 +210,15 @@ class Product
     }
 
     /**
-     * @return string|null
+     * @return float|null
      */
-    public function getPrice(): ?string
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
     /**
-     * @param float|string $price
+     * @param float $price
      *
      * @return $this
      */
@@ -271,5 +285,17 @@ class Product
         $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinks(): array
+    {
+        return [
+            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id,
+            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id,
+            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id
+        ];
     }
 }

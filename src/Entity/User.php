@@ -92,16 +92,22 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $updated_at;
+
+    /**
+     * @var array
+     * @Groups({"user:read", "product:read"})
+     */
+    private $links = [];
 
     /**
      * User constructor.
@@ -358,15 +364,25 @@ class User implements UserInterface
     }
 
     /**
-     * @param \DateTimeInterface $updated_at
-     *
      * @return $this
      */
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinks(): array
+    {
+        return [
+            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id,
+            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id,
+            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id
+        ];
     }
 
     /**

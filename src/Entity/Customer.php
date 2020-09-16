@@ -14,7 +14,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ApiResource(
  *     normalizationContext={"groups"={"customer:read"}},
- *     denormalizationContext={"groups"={"customer:write"}}
+ *     denormalizationContext={"groups"={"customer:write"}},
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"security"="is_granted('ROLE_USER')"}
+ *     },
+ *     itemOperations={
+ *         "get",
+ *         "put"={"security"="is_granted('edit', object)"},
+ *         "delete"={"security"="is_granted('delete', object)"}
+ *     }
  * )
  *
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -56,8 +65,6 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
-     *
-     * @Groups("customer:write")
      */
     private $user;
 
@@ -74,6 +81,12 @@ class Customer
      * @Groups({"customer:read", "user:read"})
      */
     private $updated_at;
+
+    /**
+     * @var array
+     * @Groups({"customer:read", "user:read"})
+     */
+    private $links = [];
 
     /**
      * Customer constructor.
@@ -200,14 +213,24 @@ class Customer
     }
 
     /**
-     * @param \DateTimeInterface $updated_at
-     *
      * @return $this
      */
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinks(): array
+    {
+        return [
+            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id,
+            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id,
+            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id
+        ];
     }
 }
