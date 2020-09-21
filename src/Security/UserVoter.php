@@ -2,16 +2,15 @@
 
 namespace App\Security;
 
-use App\Entity\Customer;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * Class CustomerVoter
+ * Class UserVoter
  * @package App\Security
  */
-class CustomerVoter extends Voter
+class UserVoter extends Voter
 {
     const EDIT = 'edit';
     const DELETE = 'delete';
@@ -19,8 +18,8 @@ class CustomerVoter extends Voter
     /**
      * Determines if the attribute and subject are supported by this voter.
      *
-     * @param string  $attribute An attribute
-     * @param Customer $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
+     * @param string $attribute An attribute
+     * @param User   $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
@@ -30,7 +29,7 @@ class CustomerVoter extends Voter
             return false;
         }
 
-        if (!$subject instanceof Customer) {
+        if (!$subject instanceof User) {
             return false;
         }
 
@@ -42,21 +41,21 @@ class CustomerVoter extends Voter
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
      * @param string         $attribute
-     * @param Customer       $subject
+     * @param User           $subject
      * @param TokenInterface $token
      *
      * @return bool
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
-        $user = $token->getUser();
+        $user_connected = $token->getUser();
 
-        if (!$user instanceof User || !$subject instanceof Customer) {
+        if (!$user_connected instanceof User) {
             return false;
         }
 
-        $customer = $subject;
+        $user = $subject;
 
-        return $user->hasRoles('ROLE_ADMIN') || $user === $customer->getUser();
+        return $user_connected->hasRoles('ROLE_ADMIN') || $user_connected->getId() === $user->getId();
     }
 }

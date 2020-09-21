@@ -57,6 +57,6 @@ class ProductVoter extends Voter
 
         $product = $subject;
 
-        return $user->hasRoles('ROLE_USER') || $user === $product->getUser();
+        return $user->hasRoles('ROLE_ADMIN') || $user === $product->getUser();
     }
 }
