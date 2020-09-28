@@ -293,9 +293,9 @@ class Product
     public function getLinks(): array
     {
         return [
-            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id,
-            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id,
-            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/products/'.$this->id
+            'self' => '/api/products/'.$this->id,
+            'update' => '/api/products/'.$this->id,
+            'delete' => '/api/products/'.$this->id
         ];
     }
 }

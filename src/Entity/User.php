@@ -388,9 +388,9 @@ class User implements UserInterface
     public function getLinks(): array
     {
         return [
-            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id,
-            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id,
-            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/users/'.$this->id
+            'self' => '/api/users/'.$this->id,
+            'update' => '/api/users/'.$this->id,
+            'delete' => '/api/users/'.$this->id
         ];
     }
 

@@ -228,9 +228,9 @@ class Customer
     public function getLinks(): array
     {
         return [
-            'self' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id,
-            'update' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id,
-            'delete' => $_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'].'/customers/'.$this->id
+            'self' => '/api/customers/'.$this->id,
+            'update' => '/api/customers/'.$this->id,
+            'delete' => '/api/customers/'.$this->id
         ];
     }
 }
