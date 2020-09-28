@@ -116,7 +116,7 @@ class User implements UserInterface
      * @var array
      * @Groups({"user:read", "product:read"})
      */
-    private $links = [];
+    private $_links = [];
 
     /**
      * User constructor.

@@ -110,7 +110,7 @@ class Product
      * @var array
      * @Groups({"product:read", "user:read"})
      */
-    private $links = [];
+    private $_links = [];
 
     /**
      * Product constructor.

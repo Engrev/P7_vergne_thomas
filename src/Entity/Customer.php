@@ -86,7 +86,7 @@ class Customer
      * @var array
      * @Groups({"customer:read", "user:read"})
      */
-    private $links = [];
+    private $_links = [];
 
     /**
      * Customer constructor.
