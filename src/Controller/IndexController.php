@@ -12,6 +12,6 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        return $this->redirect($_ENV['APP_DOMAIN_NAME_ENTITIES_LINKS'], 301);
+        return $this->redirect('/api', 301);
     }
 }
